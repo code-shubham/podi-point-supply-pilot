@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Podi Point Supply Pilot</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="bg-shape shape-1"></div>
+  <div class="bg-shape shape-2"></div>
+
+  <main class="app-shell">
+    <header class="app-header">
+      <div>
+        <p class="eyebrow">Inventory + Expiry Planner</p>
+        <h1>Podi Point Supply Pilot</h1>
+        <p class="subtext">Closing inventory formula: Opening - Demand + Supply. FIFO expiry-aware consumption is applied automatically.</p>
+      </div>
+      <div class="header-actions">
+        <button id="export-btn" class="btn secondary">Export Data</button>
+        <label class="btn ghost" for="import-input">Import Data</label>
+        <input id="import-input" type="file" accept="application/json" hidden />
+        <button id="reset-btn" class="btn danger">Reset</button>
+      </div>
+    </header>
+
+    <section class="panel-grid">
+      <section class="panel">
+        <h2>Add Product</h2>
+        <form id="product-form" class="stack">
+          <label>
+            Product Name
+            <input id="product-name" type="text" placeholder="e.g., Batter" required />
+          </label>
+          <label>
+            Default Expiry (hours)
+            <input id="product-expiry" type="number" min="0.1" step="0.1" placeholder="e.g., 14" required />
+          </label>
+          <button type="submit" class="btn primary">Add Product</button>
+        </form>
+      </section>
+
+      <section class="panel">
+        <h2>Log Supply / Demand</h2>
+        <form id="event-form" class="stack">
+          <label>
+            Product
+            <select id="event-product" required></select>
+          </label>
+          <label>
+            Type
+            <select id="event-type" required>
+              <option value="supply">Supply In</option>
+              <option value="demand">Demand Out</option>
+            </select>
+          </label>
+          <label>
+            Quantity (L / kg / units)
+            <input id="event-qty" type="number" min="0.01" step="0.01" required />
+          </label>
+          <label>
+            Date & Time
+            <input id="event-at" type="datetime-local" required />
+          </label>
+          <label id="supply-expiry-wrap">
+            Expiry for this supply (hours)
+            <input id="event-expiry" type="number" min="0.1" step="0.1" placeholder="Uses product default if empty" />
+          </label>
+          <button type="submit" class="btn primary">Save Entry</button>
+        </form>
+      </section>
+    </section>
+
+    <section class="panel">
+      <div class="section-head">
+        <h2>Current Stock & Expiry Notes</h2>
+        <p>Note: expiring items are calculated from remaining FIFO batches.</p>
+      </div>
+      <div id="inventory-cards" class="cards"></div>
+      <div id="alerts" class="alerts"></div>
+    </section>
+
+    <section class="panel">
+      <div class="section-head">
+        <h2>Products</h2>
+        <p>Edit default expiry or remove products.</p>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Product</th>
+              <th>Default Expiry (hours)</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="product-rows"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="section-head">
+        <h2>Recent Movements</h2>
+        <p>Latest supply and demand entries.</p>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Date/Time</th>
+              <th>Product</th>
+              <th>Type</th>
+              <th>Quantity</th>
+              <th>Expiry (hours)</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="event-rows"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="section-head">
+        <h2>30-Day Planner (Excel Style)</h2>
+        <p>Rows are dates. Columns are products with O/S/D/C values (Opening, Supply, Demand, Closing).</p>
+      </div>
+      <div class="table-wrap" id="planner-wrap"></div>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
